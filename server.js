@@ -10,6 +10,7 @@ const app = express();
 const socket = require('socket.io');
 const server = http.createServer(app)
 const io = socket(server);
+const { getWords } = require('./middleware/helperFunctions')
 
 
 //MODELS
@@ -45,8 +46,8 @@ app.get('/', (req, res)=>{
 // ################## WEB SOCKET CONNECTION  #########################
 //start socket connection 
 io.on('connection',socket=>{
-  console.log(`${socket.id} is connected`)
-  
+  console.log(`${socket.id} is connected`);
+
   //when a user is to create a new game
   socket.on('create-game', async ({gameCode, userid})=>{
     console.log('creating game')
@@ -59,6 +60,7 @@ io.on('connection',socket=>{
           userid,
           socketid:socket.id,
           role:1,
+          isReady:false,
         }]
       })
       await newGame.save();
@@ -81,16 +83,19 @@ io.on('connection',socket=>{
       if(!game){
         socket.emit("game-not-found"); return;
       }
-      // update game with payer details
+      // update game with payer details and game words
+      const words = getWords();
       const update = await GamesModel.updateOne({gameCode}, {
+        words,
         players: [
           ...game.players,
           {
             userid,
             socketid:socket.id,
             role:2,
+            isReady:false,
           }
-        ]
+        ],
       })
       if(update.n > 0){
         //join room

@@ -1,12 +1,12 @@
 const TransactionModel = require("../models/Transaction");
-const AdvertModel = require("../models/Advert");
 // const BankdataModel = require("../models/Bankdata");
 const FLW_calls = require("./FLW_calls");
-const uuid = require('uuid')
+const uuid = require('uuid');
+const randomWords = require('random-words');
 
 
-module.exports = {
-  prettyCurrency: amount => {
+
+  const prettyCurrency = amount => {
     const formatter = new Intl.NumberFormat("en-NG", {
       style: "currency",
       currency: "NGN",
@@ -14,8 +14,9 @@ module.exports = {
     });
     const convertedAmount = formatter.format(amount);
     return convertedAmount;
-  },
-  makeTitleCase: str => {
+  }
+
+ const  makeTitleCase = str => {
     return str
       .toLowerCase()
       .split(" ")
@@ -23,24 +24,15 @@ module.exports = {
         return word.charAt(0).toUpperCase() + word.slice(1);
       })
       .join(" ");
-  },
-  createUsername : name => {
+  }
+
+const  createUsername = name => {
         let randomId = uuid().split('-')[1].toLowerCase();
         let username = name.split(' ')[0].toLowerCase();
         return [username,randomId].join('-')
-  },
-  getBoostAmount : duration => {
-    let amount;
-    switch(duration){
-      case 1: amount =  process.env.BOOST1AMOUNT;break;
-      case 7: amount =  process.env.BOOST2AMOUNT;break;
-      case 15: amount =  process.env.BOOST3AMOUNT;break;
-      case 30: amount =  process.env.BOOST4AMOUNT;break;
-      default: amount = 0;
-    }
-    return parseInt(amount);
-  },
-  verifyPayment: async (txref, transaction, txtype) => {
+  }
+
+const  verifyPayment = async (txref, transaction, txtype) => {
     const payload = {
       txref,
       SECKEY: process.env.FLW_SECRET_KEY
@@ -90,20 +82,18 @@ module.exports = {
       }
     }
     return false;
-  },
-  boostCheck : async () => {
-    console.log("herere")
-    try{
-        const allAds = await AdvertModel.find()
-                                        .where('boostpoint').gt(0)
-        allAds.map(async singleAd=>{
-          const upd = await AdvertModel.updateOne({_id:singleAd._id},{
-            boostpoint: parseInt(singleAd.boostpoint) - 1
-          })
-        })
-        console.log(allAds.length + " Ads Updated on " + new Date())
-    }catch(err){
-      console.log("Could not reset boost ads on " + new Date())
-    }
+  }
+
+
+const  getWords = () => {
+  const words = randomWords({exactly:3, wordsPerString:2, separator:''})
+  return words
 }
-};
+
+module.exports = {
+  prettyCurrency,
+  createUsername,
+  verifyPayment, 
+  makeTitleCase, 
+  getWords,
+}
