@@ -49,6 +49,7 @@ io.on('connection',socket=>{
   
   //when a user is to create a new game
   socket.on('create-game', async ({gameCode, userid})=>{
+    console.log('creating game')
     //save new game
     try{
       console.log('here first')

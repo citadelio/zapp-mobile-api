@@ -10,6 +10,7 @@ router.post('/validate-code', isRequestFromMobile, async(req, res)=>{
     const {gameCode} = req.body
     try{
         const game = await GamesModel.findOne({gameCode});
+        console.log(game);
         return res.json({
             status: game?false:true
         }) 
