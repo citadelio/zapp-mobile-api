@@ -30,10 +30,9 @@ router.post('/game-data', isRequestFromMobile, async(req, res)=>{
             errors: [{ msg: "Error occured" }]
           });
         }
-        let newPlayersDetail = [];
-        game.players.map(async player => {
+        let newPlayersDetail =  game.players.map(async player => {
           let  userDetail = await getPlayerDetails(player.playerId);
-          newPlayersDetail.push(userDetail)
+          return [...newPlayersDetail, userDetail]
         })
         
         const gameData = {
