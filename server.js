@@ -49,7 +49,7 @@ io.on('connection',socket=>{
   console.log(`${socket.id} is connected`);
 
   //when a user is to create a new game
-  socket.on('create-game', async ({gameCode, userid})=>{
+  socket.on('create-game', async ({gameCode, playerId})=>{
     console.log('creating game')
     //save new game
     try{
@@ -57,7 +57,7 @@ io.on('connection',socket=>{
       const newGame = new GamesModel({
         gameCode,
         players: [{
-          userid,
+          playerId,
           socketid:socket.id,
           role:1,
           isReady:false,
@@ -76,7 +76,7 @@ io.on('connection',socket=>{
   })
 
   //when a user is to join an existing game
-  socket.on('join-game',async ({gameCode, userid})=>{
+  socket.on('join-game',async ({gameCode, playerId})=>{
     try{
       //look for game with gamecode
       const game = await GamesModel.findOne({gameCode});
@@ -90,7 +90,7 @@ io.on('connection',socket=>{
         players: [
           ...game.players,
           {
-            userid,
+            playerId,
             socketid:socket.id,
             role:2,
             isReady:false,
