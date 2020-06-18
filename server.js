@@ -111,8 +111,39 @@ io.on('connection',socket=>{
 
   //When a player is typing
   socket.on('is-typing', ({gameCode})=>{
-    console.log('is typing', gameCode)
     socket.broadcast.to(gameCode).emit('is-typing')
+  })
+  //When a player finishes typing
+  socket.on('end-typing', ({gameCode})=>{
+    socket.broadcast.to(gameCode).emit('end-typing')
+  })
+  //When a player is ready
+  socket.on('user-ready',async({gameCode, userid})=>{
+    try{
+        const game = await GamesModel.findOne({gameCode});
+        console.log(game)
+        if(game){
+          let thisPlayer =   game.players.map(player=>player.playerId === userid)
+          thisPlayer.isReady = true;
+          console.log(thisPlayer);
+          let opponent =   game.players.map(player=>player.playerId !== userid)
+          console.log(opponent)
+
+          //update game
+          const updatedGame = await GamesModel.updateOne({gameCode}, {
+            players:[thisPlayer, opponent]
+          });
+          console.log(updatedGame)
+          if(updatedGame.n > 0){
+            socket.broadcast.to(gameCode).emit('opponent-ready')
+          }
+        }
+    }catch(err){
+      console.log(err)
+    }
+
+
+    // socket.broadcast.to(gameCode).emit('end-typing')
   })
 
   socket.on('disconnect', ()=>{
