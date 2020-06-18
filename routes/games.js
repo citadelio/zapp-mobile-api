@@ -30,19 +30,19 @@ router.post('/game-data', isRequestFromMobile, async(req, res)=>{
             errors: [{ msg: "Error occured" }]
           });
         }
-        console.log(game)
         let newPlayersDetail = [];
         game.players.map(async player => {
-            let  userDetail = await getPlayerDetails(player.playerId);
-            console.log("GD",userDetail)
-            newPlayersDetail.push(userDetail)
+          let  userDetail = await getPlayerDetails(player.playerId);
+          newPlayersDetail.push(userDetail)
         })
-
+        
         const gameData = {
           ...game,
           players:newPlayersDetail
         }
-        // console.log(gameData)
+        console.log("PLD",newPlayersDetail)
+        console.log("GLD",game)
+        console.log("GGLD",gameData)
         return res.json(gameData);
       }catch(err){
         return res.json({
@@ -54,7 +54,6 @@ router.post('/game-data', isRequestFromMobile, async(req, res)=>{
 const getPlayerDetails = async playerId=>{
       try{
           const user = await UsersModel.findById(playerId);
-          console.log("PD", user)
           return user;
       }catch(err){
         return res.json({
