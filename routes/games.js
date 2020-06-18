@@ -22,26 +22,26 @@ router.post('/validate-code', isRequestFromMobile, async(req, res)=>{
 })
 
 router.post('/game-data', isRequestFromMobile, async(req, res)=>{
-      const {gameCode} = req.body
-      try{
+    try{
+    let playersArray = [];
+    const {gameCode} = req.body
         const game = await GamesModel.findOne({gameCode});
         if(!game) {
           return res.json({
-            errors: [{ msg: "Error occured" }]
+            errors: [{ msg: "No game found" }]
           });
         }
-        let newPlayersDetail =  game.players.map(async player => {
+        console.log(game);
+      game.players.map(
+          async (player,key) => {
           let  userDetail = await getPlayerDetails(player.playerId);
-          return  userDetail
-        })
-        
-        const gameData = {
-          players:newPlayersDetail
+          playersArray.push(userDetail);
+            if(key === 1){
+                game.players = playersArray
+              return res.json(game);
+            }
         }
-        console.log("PLD",newPlayersDetail)
-        console.log("GLD",game)
-        console.log("GGLD",gameData)
-        return res.json(gameData);
+        )
       }catch(err){
         return res.json({
           errors: [{ msg: "Error occured" }]
