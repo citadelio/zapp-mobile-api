@@ -111,6 +111,7 @@ io.on('connection',socket=>{
 
   //When a player is typing
   socket.on('is-typing', ({gameCode})=>{
+    console.log('is typing')
     io.broadcast.to(gameCode).emit('is-typing')
   })
 
