@@ -32,11 +32,10 @@ router.post('/game-data', isRequestFromMobile, async(req, res)=>{
         }
         let newPlayersDetail =  game.players.map(async player => {
           let  userDetail = await getPlayerDetails(player.playerId);
-          return [...newPlayersDetail, userDetail]
+          return  userDetail
         })
         
         const gameData = {
-          ...game,
           players:newPlayersDetail
         }
         console.log("PLD",newPlayersDetail)
