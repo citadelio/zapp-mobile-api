@@ -53,7 +53,6 @@ io.on('connection',socket=>{
     console.log('creating game')
     //save new game
     try{
-      console.log('here first')
       const newGame = new GamesModel({
         gameCode,
         players: [{
@@ -67,10 +66,7 @@ io.on('connection',socket=>{
     }catch(err){
       console.log(err)
     }
-    console.log('got here')
     //join game
-    socket.join(gameCode);
-    console.log('got here 2')
     io.to(gameCode).emit('game-created',{gameCode})
     // io.to(gameCode).emit('start-game',{gameCode})
   })

@@ -31,7 +31,7 @@ router.post('/game-data', isRequestFromMobile, async(req, res)=>{
             errors: [{ msg: "No game found" }]
           });
         }
-        console.log(game);
+        // console.log(game);
       game.players.map(
           async (player,key) => {
           let  userDetail = await getPlayerDetails(player.playerId);
