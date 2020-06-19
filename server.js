@@ -124,7 +124,7 @@ io.on('connection',socket=>{
               return player
             }
           })
-          thisPlayer[0].isReady = true;
+          // thisPlayer[0].isReady = true;
           let opponent =   game.players.map(player=>{
             if(player.playerId !== userid){
               return player
