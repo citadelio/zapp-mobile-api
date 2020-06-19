@@ -130,12 +130,14 @@ io.on('connection',socket=>{
               return player
             }
           })
-          console.log(thisPlayer.filter(Boolean));
-          console.log(opponent.filter(Boolean))
+          thisPlayer.filter(Boolean)
+          opponent.filter(Boolean)
+          console.log(thisPlayer);
+          console.log(opponent)
 
           //update game
           const updatedGame = await GamesModel.updateOne({gameCode}, {
-            players:[thisPlayer[0], opponent[1]]
+            players:[thisPlayer[0], opponent[0]]
           });
           console.log(updatedGame)
           if(updatedGame.n > 0){
