@@ -124,18 +124,18 @@ io.on('connection',socket=>{
               return player
             }
           })
-          thisPlayer.isReady = true;
-          console.log(thisPlayer);
+          thisPlayer[0].isReady = true;
           let opponent =   game.players.map(player=>{
             if(player.playerId !== userid){
               return player
             }
           })
-          console.log(opponent)
+          console.log(thisPlayer.filter(Boolean));
+          console.log(opponent.filter(Boolean))
 
           //update game
           const updatedGame = await GamesModel.updateOne({gameCode}, {
-            players:[thisPlayer, opponent]
+            players:[thisPlayer[0], opponent[1]]
           });
           console.log(updatedGame)
           if(updatedGame.n > 0){
