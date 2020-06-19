@@ -89,7 +89,7 @@ const  getWords = () => {
   return words
 }
 
-const nextWord = async ({gameCode}) => {
+const nextWord = async gameCode => {
   try{
     const game = await GamesModel.findOne({gameCode})
     if(!game){
