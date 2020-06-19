@@ -143,7 +143,8 @@ io.on('connection',socket=>{
             if(opponent[0].isReady){
               io.to(gameCode).emit('all-ready')
               // call nextWord()
-              const nextWordData = nextWord(gameCode);
+              const nextWordData = await nextWord(gameCode);
+              console.log(nextWordData)
               if(!nextWordData.errors) io.to(gameCode).emit('next-word', nextWordData)
             }else{
               //else emit waiting for opponent
