@@ -132,7 +132,8 @@ io.on('connection',socket=>{
           })
           thisPlayer = thisPlayer.filter(Boolean)
           opponent = opponent.filter(Boolean)
-        
+          thisPlayer[0].isReady = true;
+          console.log(thisPlayer);
 
           //update game
           const updatedGame = await GamesModel.updateOne({gameCode}, {
