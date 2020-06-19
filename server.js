@@ -121,12 +121,19 @@ io.on('connection',socket=>{
   socket.on('user-ready',async({gameCode, userid})=>{
     try{
         const game = await GamesModel.findOne({gameCode});
-        console.log(game)
         if(game){
-          let thisPlayer =   game.players.map(player=>player.playerId === userid)
+          let thisPlayer =   game.players.map(player=>{
+            if(player.playerId === userid){
+              return player
+            }
+          })
           thisPlayer.isReady = true;
           console.log(thisPlayer);
-          let opponent =   game.players.map(player=>player.playerId !== userid)
+          let opponent =   game.players.map(player=>{
+            if(player.playerId !== userid){
+              return player
+            }
+          })
           console.log(opponent)
 
           //update game
@@ -135,6 +142,8 @@ io.on('connection',socket=>{
           });
           console.log(updatedGame)
           if(updatedGame.n > 0){
+            //if opponent is ready, io emit get-word, pass word
+            //else socket emit waiting for opponent
             socket.broadcast.to(gameCode).emit('opponent-ready')
           }
         }
