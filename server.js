@@ -67,6 +67,7 @@ io.on('connection',socket=>{
       console.log(err)
     }
     //join game
+    socket.join(gameCode);
     io.to(gameCode).emit('game-created',{gameCode})
     // io.to(gameCode).emit('start-game',{gameCode})
   })
