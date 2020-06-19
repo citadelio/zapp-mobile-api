@@ -10,7 +10,7 @@ const app = express();
 const socket = require('socket.io');
 const server = http.createServer(app)
 const io = socket(server);
-const { getWords } = require('./middleware/helperFunctions')
+const { getWords, nextWord } = require('./middleware/helperFunctions')
 
 
 //MODELS
@@ -133,25 +133,35 @@ io.on('connection',socket=>{
           thisPlayer = thisPlayer.filter(Boolean)
           opponent = opponent.filter(Boolean)
           thisPlayer[0].isReady = true;
-          console.log(thisPlayer);
-
           //update game
           const updatedGame = await GamesModel.updateOne({gameCode}, {
             players:[thisPlayer[0], opponent[0]]
           });
-          console.log(updatedGame)
+
           if(updatedGame.n > 0){
             //if opponent is ready, io emit get-word, pass word
-            //else socket emit waiting for opponent
-            socket.broadcast.to(gameCode).emit('opponent-ready')
+            if(opponent[0].isReady){
+              io.to(gameCode).emit('all-ready')
+              // call nextWord()
+              const nextWordData = nextWord(gameCode);
+              if(!nextWordData.errors) io.to(gameCode).emit('next-word', nextWordData)
+            }else{
+              //else emit waiting for opponent
+              readyPlayerId = thisPlayer[0].playerId;
+              io.to(gameCode).emit('player-ready', {readyPlayerId})
+
+            }
           }
         }
     }catch(err){
       console.log(err)
     }
-
-
     // socket.broadcast.to(gameCode).emit('end-typing')
+  })
+
+  socket.on('next-word', ({gameCode})=>{
+    const nextWordData = nextWord(gameCode);
+    if(!nextWordData.errors) io.to(gameCode).emit('next-word', nextWordData)
   })
 
   socket.on('disconnect', ()=>{

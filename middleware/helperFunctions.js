@@ -1,9 +1,8 @@
 const TransactionModel = require("../models/Transaction");
-// const BankdataModel = require("../models/Bankdata");
 const FLW_calls = require("./FLW_calls");
 const uuid = require('uuid');
 const randomWords = require('random-words');
-
+const GamesModel = require('../models/Games')
 
 
   const prettyCurrency = amount => {
@@ -90,10 +89,39 @@ const  getWords = () => {
   return words
 }
 
+const nextWord = async ({gameCode}) => {
+  try{
+    const game = await GamesModel.findOne({gameCode})
+    if(!game){
+      return {
+        errors: [{ msg: "No game found" }]
+      }
+    }
+    const data = {
+      status:"start",
+      currentIndex: game.currentIndex + 1,
+      currentWord: game.words[game.currentIndex + 1]
+  }
+    const updateGame = await GamesModel.updateOne({gameCode}, data)
+    if(updateGame.n > 0) return data;
+  }catch(err){
+    return {
+      errors: [{ msg: "Error occured" }]
+    }
+  }
+
+}
+
+const getCurrentWord = () => {
+
+}
+
 module.exports = {
   prettyCurrency,
   createUsername,
   verifyPayment, 
   makeTitleCase, 
   getWords,
+  getCurrentWord,
+  nextWord,
 }
