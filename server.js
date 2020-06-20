@@ -160,8 +160,9 @@ io.on('connection',socket=>{
     // socket.broadcast.to(gameCode).emit('end-typing')
   })
 
-  socket.on('next-word', ({gameCode})=>{
-    const nextWordData = nextWord(gameCode);
+  socket.on('next-word',async ({gameCode})=>{
+    const nextWordData = await nextWord(gameCode);
+    console.log(nextWordData)
     if(!nextWordData.errors) io.to(gameCode).emit('next-word', nextWordData)
   })
 
