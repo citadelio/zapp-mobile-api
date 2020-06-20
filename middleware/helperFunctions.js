@@ -85,7 +85,7 @@ const  verifyPayment = async (txref, transaction, txtype) => {
 
 
 const  getWords = () => {
-  const words = randomWords({exactly:9, wordsPerString:2, separator:''})
+  const words = randomWords({exactly:3, wordsPerString:2, separator:''})
   return words
 }
 
