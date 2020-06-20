@@ -177,10 +177,10 @@ io.on('connection',socket=>{
             if(game.currentWord.toLowerCase() === word){
               const nextWordData = await nextWord(gameCode);
               let thisPlayer = game.players.map(player=>{
-                return player.playerId === userid
+                if(player.playerId === userid) return player 
               })
               let opponent = game.players.map(player=>{
-                return player.playerId !== userid
+                if(player.playerId !== userid) return player
               })
               thisPlayer = thisPlayer.filter(Boolean);
               thisPlayer[0].point++
