@@ -10,7 +10,7 @@ const app = express();
 const socket = require('socket.io');
 const server = http.createServer(app)
 const io = socket(server);
-const { getWords, nextWord } = require('./middleware/helperFunctions')
+const { getWords, nextWord, getScore } = require('./middleware/helperFunctions')
 
 
 //MODELS
@@ -60,6 +60,7 @@ io.on('connection',socket=>{
           socketid:socket.id,
           role:1,
           isReady:false,
+          point:0,
         }]
       })
       await newGame.save();
@@ -91,6 +92,7 @@ io.on('connection',socket=>{
             socketid:socket.id,
             role:2,
             isReady:false,
+            point:0,
           }
         ],
       })
@@ -144,7 +146,7 @@ io.on('connection',socket=>{
               io.to(gameCode).emit('all-ready')
               // call nextWord()
               const nextWordData = await nextWord(gameCode);
-              console.log(nextWordData)
+              // console.log(nextWordData)
               if(!nextWordData.errors) io.to(gameCode).emit('next-word', nextWordData)
             }else{
               //else emit waiting for opponent
@@ -162,8 +164,31 @@ io.on('connection',socket=>{
 
   socket.on('next-word',async ({gameCode})=>{
     const nextWordData = await nextWord(gameCode);
-    console.log(nextWordData)
+    // console.log(nextWordData)
     if(!nextWordData.errors) io.to(gameCode).emit('next-word', nextWordData)
+  })
+  socket.on('exit-game', ({gameCode})=>{
+    socket.leave(gameCode)
+  })
+  socket.on('validate-answer', async({gameCode, userid, word})=>{
+      try{
+          const game = await GamesModel.findOne({gameCode});
+          if(game){
+            if(game.currentWord.toLowerCase() === word){
+              const nextWordData = await nextWord(gameCode);
+              let thisPlayer = game.players.map(player=>{
+                return player.playerId === userid
+              })
+              thisPlayer = thisPlayer.filter(Boolean);
+              thisPlayer[0].point++
+              if(!nextWordData.errors) io.to(gameCode).emit('next-word', nextWordData)
+              const currentScore = await getScore(gameCode)
+              if(!currentScore.errors) io.to(gameCode).emit("update-score", currentScore)
+            }
+          }
+      }catch(err){
+        console.log(err)
+      }
   })
 
   socket.on('disconnect', ()=>{

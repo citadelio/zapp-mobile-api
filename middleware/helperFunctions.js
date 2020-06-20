@@ -112,8 +112,20 @@ const nextWord = async gameCode => {
 
 }
 
-const getCurrentWord = () => {
-
+const getScore =  async gameCode => {
+      try{
+        const game = await GamesModel.findOne({gameCode})
+        if(!game){
+          return {
+            errors: [{ msg: "No game found" }]
+          }
+        }
+        return game.players
+      }catch(err){
+        return {
+          errors: [{ msg: "Error occured" }]
+        }
+      }
 }
 
 module.exports = {
@@ -122,6 +134,6 @@ module.exports = {
   verifyPayment, 
   makeTitleCase, 
   getWords,
-  getCurrentWord,
+  getScore,
   nextWord,
 }
