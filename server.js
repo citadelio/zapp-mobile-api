@@ -179,11 +179,20 @@ io.on('connection',socket=>{
               let thisPlayer = game.players.map(player=>{
                 return player.playerId === userid
               })
+              let opponent = game.players.map(player=>{
+                return player.playerId !== userid
+              })
               thisPlayer = thisPlayer.filter(Boolean);
               thisPlayer[0].point++
+               //update game
+          const updatedGame = await GamesModel.updateOne({gameCode}, {
+            players:[thisPlayer[0], opponent[0]]
+          });
+            if(updatedGame.n > 0){
               if(!nextWordData.errors) io.to(gameCode).emit('next-word', nextWordData)
               const currentScore = await getScore(gameCode)
               if(!currentScore.errors) io.to(gameCode).emit("update-score", currentScore)
+            } 
             }
           }
       }catch(err){
