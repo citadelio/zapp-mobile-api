@@ -183,6 +183,7 @@ io.on('connection',socket=>{
                 if(player.playerId !== userid) return player
               })
               thisPlayer = thisPlayer.filter(Boolean);
+              opponent = opponent.filter(Boolean);
               thisPlayer[0].point++
                //update game
           const updatedGame = await GamesModel.updateOne({gameCode}, {
