@@ -85,7 +85,7 @@ const  verifyPayment = async (txref, transaction, txtype) => {
 
 
 const  getWords = () => {
-  const words = randomWords({exactly:15, wordsPerString:2, separator:''})
+  const words = randomWords({exactly:9, wordsPerString:2, separator:''})
   return words
 }
 
@@ -97,6 +97,7 @@ const nextWord = async gameCode => {
         errors: [{ msg: "No game found" }]
       }
     }
+    if(game.currentIndex === game.words.length - 1) return {endgame:true}
     const data = {
       status:"start",
       currentIndex: game.currentIndex + 1,

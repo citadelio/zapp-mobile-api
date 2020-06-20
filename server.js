@@ -190,10 +190,17 @@ io.on('connection',socket=>{
             players:[thisPlayer[0], opponent[0]]
           });
             if(updatedGame.n > 0){
-              if(!nextWordData.errors) io.to(gameCode).emit('next-word', nextWordData)
               const currentScore = await getScore(gameCode)
               if(!currentScore.errors) io.to(gameCode).emit("update-score", currentScore)
+
+              if(nextWordData.endgame){
+                io.to(gameCode).emit('end-game')
+              }
+              else{
+              if(!nextWordData.errors) io.to(gameCode).emit('next-word', nextWordData)
             } 
+
+          }
             }
           }
       }catch(err){
