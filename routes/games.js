@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const protectedRoute = require("../middleware/auth");
 const isRequestFromMobile = require("../middleware/mobilecheck");
-
+const allGames = require('../middleware/gameData');
 // MODELS
 const GamesModel = require('../models/Games')
 const UsersModel = require('../models/User')
@@ -47,6 +47,10 @@ router.post('/game-data', isRequestFromMobile, async(req, res)=>{
           errors: [{ msg: "Error occured" }]
         });
       }
+})
+
+router.get('/all-games', (req, res)=>{
+    res.json(allGames);
 })
 
 const getPlayerDetails = async playerId=>{
