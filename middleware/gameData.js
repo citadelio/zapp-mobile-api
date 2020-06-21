@@ -4,7 +4,7 @@ module.exports = [
     {
         key:1,
         name:"Fastest Finger",
-        photo:"https://res.cloudinary.com/citadel/image/upload/v1592727034/sprinter_htmq2n.svg",
+        photo:"https://res.cloudinary.com/citadel/image/upload/v1592729082/sprinter_cp9ni0.png",
         description:"This is a fastest fingers game. On Android at most three buttons can be specified. Android has a concept of a neutral, negative and a positive button. Optionally provide a list of buttons. Tapping any button will fire the respective onPress callback and dismiss the alert. By default, the only button will be an 'OK' button.",
         available:true
     },
