@@ -171,6 +171,7 @@ io.on('connection',socket=>{
     socket.leave(gameCode)
   })
   socket.on('validate-answer', async({gameCode, userid, word})=>{
+      socket.broadcast.to(gameCode).emit('add-message', word)
       try{
           const game = await GamesModel.findOne({gameCode});
           if(game){
