@@ -20,7 +20,10 @@ const UserSchema = new Schema({
     created : {
         type : Date,
         default : Date.now
-    }
+    },
+    role:String,
+    bottype:String,
+    
 
 })
 

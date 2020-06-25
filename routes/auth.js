@@ -672,7 +672,8 @@ router.post('/mobile', isRequestFromMobile, async (req, res) => {
               name,
               authType,
               avatar:picture,
-              userid:id
+              userid:id,
+              role:"user"
           }) 
           await user.save();
       }
@@ -688,6 +689,35 @@ router.post('/mobile', isRequestFromMobile, async (req, res) => {
         errors: [{ msg: "invalid token" }]
       });
   }
+})
+
+router.post('/create-bot-user', isRequestFromMobile, async (req, res)=>{
+        try{
+          const { id, name, picture, bottype} = req.body
+          let user = await UserModel.findOne({userid:id});
+          if(!user){
+              //create a new user record
+              user = new UserModel({
+                  name,
+                  bottype,
+                  authType:"bot",
+                  avatar:{
+                      data:{
+                        url: picture
+                      }
+                  },
+                  userid:id,
+                  role:"bot"
+              }) 
+              await user.save();
+              return res.json(user)
+          }
+
+        }catch(err){
+          return res.status(401).json({
+            errors: [{ msg: "Error" }]
+          });
+        }
 })
 
 
