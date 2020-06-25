@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const protectedRoute = require("../middleware/auth");
+const isRequestFromMobile = require("../middleware/mobilecheck");
 
 
 // Models
@@ -30,6 +31,22 @@ router.get('/detail', protectedRoute, async(req, res)=>{
       });
     }
 });
+
+router.get('/get-active-users', isRequestFromMobile, async (req, res)=>{
+  try{
+      const users = await UserModel.find({role:"bot"})
+      return res.json(users);
+  }catch(err){
+    return res.json({
+      errors: [
+        {
+          msg: "An error occurred, try again",
+          err
+        }
+      ]
+    });
+  }
+} )
 
 
 module.exports = router;
