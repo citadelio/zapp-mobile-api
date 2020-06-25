@@ -1,5 +1,6 @@
 module.exports = (req, res, next) => {
   const from = req.header("X-REQUEST-FROM");
+  console.log(from);
   if (!from) {
     return res.json({
       errors: [{ msg: "Invalid request" }]
