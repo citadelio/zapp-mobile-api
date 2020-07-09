@@ -67,7 +67,7 @@ const getPlayerDetails = async playerId=>{
       }
 }
 
-router.post('/initRandomGame', isRequestFromMobile, async (req, res)=>{
+router.post('/init-randomGame', isRequestFromMobile, async (req, res)=>{
     try{
         const {player, opponent} = req.body
         const words = getWords();
@@ -91,6 +91,35 @@ router.post('/initRandomGame', isRequestFromMobile, async (req, res)=>{
         errors: [{ msg: "Error occured" }]
       });
     }
+})
+
+router.post('/random-game-update', isRequestFromMobile, async(req, res)=>{
+      try{
+          const {thisPlayer, opponent, gameInfo} = req.body
+          const game = await GamesRandomModel.findById(gameInfo._id);
+          if(game){
+            const updateGame = await GamesRandomModel.updateOne({_id:game._id},{
+              player : {
+                ...game.player, point: thisPlayer.point
+              },
+              opponent : {
+                ...game.opponent, point: opponent.point
+              }
+            })
+              console.log(updateGame);
+            if(updateGame.n > 0){
+              res.json({status:true})
+            }else{
+              res.json({
+                errors: [{ msg: "Unable to save" }]
+              })
+            }
+          }
+      }catch(err){
+          res.json({
+            errors: [{ msg: "Error occured" }]
+          })
+      }
 })
 
 

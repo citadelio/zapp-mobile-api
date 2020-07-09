@@ -34,7 +34,10 @@ router.get('/detail', protectedRoute, async(req, res)=>{
 
 router.get('/get-active-users', isRequestFromMobile, async (req, res)=>{
   try{
-      const users = await UserModel.find({role:"bot"})
+      let users = await UserModel.find({role:"bot"})
+       users = users.map((a) => ({sort: Math.random(), value: a}))
+                    .sort((a, b) => a.sort - b.sort)
+                    .map((a) => a.value)
       return res.json(users);
   }catch(err){
     return res.json({
