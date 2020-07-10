@@ -38,6 +38,7 @@ app.use(bodyParser.json())
 app.use('/auth', require('./routes/auth'));
 app.use('/users', require('./routes/users'));
 app.use('/games', require('./routes/games'));
+app.use('/wallets', require('./routes/wallets'));
 app.get('/', (req, res)=>{
   res.json({'status':true})
   // res.sendFile('/')
@@ -50,7 +51,7 @@ io.on('connection',socket=>{
 
   //when a user is to create a new game
   socket.on('create-game', async ({gameCode, playerId})=>{
-    console.log('creating game')
+    // console.log('creating game')
     //save new game
     try{
       const newGame = new GamesModel({
