@@ -51,6 +51,7 @@ router.post('/get-account-name', async (req, res)=>{
   try{
         const {accountnumber, bankcode} = req.body
         const name = await resolveAccountNumber(accountnumber, bankcode)
+        console.log(name)
         return res.json(name)
   }catch(err){
     return res.json({
