@@ -1,5 +1,6 @@
 const router = require("express").Router();
-const { getAllBanks } = require("../middleware/PaystackEndpoints");
+const { getAllBanks, resolveAccountNumber } = require("../middleware/PaystackEndpoints");
+const isRequestFromMobile = require("../middleware/mobilecheck");
 
 //Models
 const BanksModel = require("../models/Banks");
@@ -30,12 +31,11 @@ router.get("/upate-all-banks", async (req, res) => {
   }
 });
 
-router.get("/all-banks",async (req, res)=>{
+router.get("/all-banks", isRequestFromMobile, async (req, res)=>{
     try{
         const banks = await BanksModel.find();
-        res.json(banks[0].banks)
+       return res.json(banks[0].banks)
     }catch(err){
-        console.log(err)
         return res.json({
             errors: [
               {
@@ -45,6 +45,23 @@ router.get("/all-banks",async (req, res)=>{
             ]
           });
     }
+})
+
+router.post('/get-account-name', async (req, res)=>{
+  try{
+        const {accountnumber, bankcode} = req.body
+        const name = await resolveAccountNumber(accountnumber, bankcode)
+        return res.json(name)
+  }catch(err){
+    return res.json({
+      errors: [
+        {
+          msg: "An error occurred, try again",
+          err
+        }
+      ]
+    });
+  }
 })
 
 module.exports = router;
