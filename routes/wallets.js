@@ -33,7 +33,6 @@ router.get("/upate-all-banks", async (req, res) => {
 });
 
 router.get("/all-banks", isRequestFromMobile, async (req, res)=>{
-  console.log("he")
     try{
       console.log("herere")
         const allbanks = await BanksModel.find();
