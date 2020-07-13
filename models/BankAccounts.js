@@ -3,7 +3,10 @@ const Schema = mongoose.Schema;
 
 const BankAccountsSchema = new Schema({
     userid : String,
-    bankaccount:Object,
+    accountname: String,
+    bankcode: String,
+    accountnumber: String,
+    bankname: String,
     created : {
         type : Date,
         default : Date.now

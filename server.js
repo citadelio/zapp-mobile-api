@@ -19,7 +19,6 @@ const GamesModel = require('./models/Games')
 if (process.env.NODE_ENV === "production") {
     app.use(express.static("build"));
   }
-// app.use(express.static(path.join(__dirname,"src")));
   
 //connect to DB
 mongoose.connect(process.env.dbConnectCloud, {
@@ -39,10 +38,17 @@ app.use('/auth', require('./routes/auth'));
 app.use('/users', require('./routes/users'));
 app.use('/games', require('./routes/games'));
 app.use('/wallets', require('./routes/wallets'));
+app.use(express.static(path.join(__dirname,"src")));
+
 app.get('/', (req, res)=>{
-  res.json({'status':true})
-  // res.sendFile('/')
+  // res.json({
+  //   msg:`Welcome to ${process.env.SITE_NAME}. Download the app on the Android Playstore and Apple Appstore`
+  // })
+  res.sendFile('/')
 })
+// app.get('/payment-success', (req, res)=>{
+//   res.sendFile('/success.html')
+// })
 
 // ################## WEB SOCKET CONNECTION  #########################
 //start socket connection 

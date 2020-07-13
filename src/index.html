@@ -3,13 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Zapp Games</title>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
 </head>
 <body>
-    <h1>Hello!</h1>
-    <script src="/socket.io/socket.io.js"></script>
-    <script>
-        var socket = io();
-    </script>
+    <div id="container">
+        <i id="icon" data-feather="check-circle"></i>
+        <h3 id="text">Payment Successful</h3>
+        <p>
+            Click the <code> Back to Wallet</code> button above to continue
+        </p>
+    </div>
+
+    <style>
+        #container{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height:100vh;
+        }
+        #icon{
+        width: 72px;
+        height: 72px;
+        color:#2CB9B0;
+        }
+        #text{
+            color:#2CB9B0;
+        }
+        code{
+            background-color:rgba(44,185,176, 0.25);
+            padding: 5px;
+        }
+    </style>
+    <script> feather.replace() </script>
 </body>
 </html>

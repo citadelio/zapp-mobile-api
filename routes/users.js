@@ -4,7 +4,7 @@ const isRequestFromMobile = require("../middleware/mobilecheck");
 
 
 // Models
-const UserModel = require('../models/User')
+const UserModel = require('../models/User');
 
 router.get('/detail', protectedRoute, async(req, res)=>{
     try{
@@ -50,6 +50,23 @@ router.get('/get-active-users', isRequestFromMobile, async (req, res)=>{
     });
   }
 } )
+
+router.get('/get-updated-data/:userid', isRequestFromMobile, async(req, res)=>{
+    try{
+      const {userid} = req.params
+        const user = await UserModel.findById(userid);
+        return res.json(user);
+    }catch(err){
+      return res.json({
+        errors: [
+          {
+            msg: "An error occurred, try again",
+            err
+          }
+        ]
+      });
+    }
+})
 
 
 module.exports = router;
