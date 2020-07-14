@@ -276,4 +276,68 @@ router.post("/withdraw-funds", isRequestFromMobile, async (req,res)=>{
       });
     }
 })
+
+router.post('/deduct-game-fee', isRequestFromMobile, async (req, res)=>{
+  try{
+    const {user, stake} = req.body;
+    const getUser = await UsersModel.findById(user._id);
+    if(!getUser){
+      return res.json({
+        errors: [
+          {
+            msg: "User not found",
+          }
+        ]
+      });
+    }
+
+    if(parseFloat(stake) > parseFloat(getUser.wallet)){
+      return res.json({
+        errors: [
+          {
+            msg: "You do not have sufficient funds in your wallet",
+          }
+        ]
+      });
+    }
+    const updateUser = await UsersModel.updateOne({_id:getUser._id}, {wallet:parseFloat(getUser.wallet) - parseFloat(stake)})
+
+    if(updateUser.n > 0){
+      return res.json({status:"success"})
+    }
+
+  }catch(err){
+    console.log(err)
+    return res.json({
+      errors: [
+        {
+          msg: "An error occurred, try again",
+          err
+        }
+      ]
+    });
+  }
+})
+
+router.post('/update-user-balance', isRequestFromMobile, async(req, res)=>{
+  try{
+      const {amount,userid, isWinner} = req.body;
+      const user = await UsersModel.findById(userid);
+      if(isWinner){
+      const updateUser = await UsersModel.updateOne({_id:userid},{wallet:(parseFloat(user.wallet) + parseFloat(amount))})
+      }
+      const recentUser = await UsersModel.findById(userid);
+      res.json(recentUser);
+  }catch(err){
+    console.log(err)
+    return res.json({
+      errors: [
+        {
+          msg: "An error occurred, try again",
+          err
+        }
+      ]
+    });
+  }
+})
 module.exports = router;

@@ -56,11 +56,12 @@ io.on('connection',socket=>{
   console.log(`${socket.id} is connected`);
 
   //when a user is to create a new game
-  socket.on('create-game', async ({gameCode, playerId})=>{
+  socket.on('create-game', async ({gameCode, name, playerId})=>{
     // console.log('creating game')
     //save new game
     try{
       const newGame = new GamesModel({
+        name,
         gameCode,
         players: [{
           playerId,
@@ -107,7 +108,7 @@ io.on('connection',socket=>{
         //join room
         socket.join(gameCode);
         //emit game joined
-        io.to(gameCode).emit('start-game',{gameCode})
+        io.to(gameCode).emit('start-game',{gameCode, name:game.name})
       }
 
       }catch(err){
