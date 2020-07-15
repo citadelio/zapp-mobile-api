@@ -177,6 +177,7 @@ io.on('connection',socket=>{
   })
   socket.on('exit-game', ({gameCode})=>{
     socket.leave(gameCode)
+    io.to(gameCode).emit('exit-game')
   })
   socket.on('validate-answer', async({gameCode, userid, word})=>{
       socket.broadcast.to(gameCode).emit('add-message', word)
