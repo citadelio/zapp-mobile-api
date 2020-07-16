@@ -9,6 +9,7 @@ const GamesModel = require('../models/Games')
 const GamesRandomModel = require('../models/GamesRandom')
 const UsersModel = require('../models/User')
 const LeaderboardModel = require('../models/Leaderboard')
+const HistoryModel = require('../models/History')
 
 
 router.post('/validate-code', isRequestFromMobile, async(req, res)=>{
@@ -127,8 +128,7 @@ router.get("/get-leaderboard", isRequestFromMobile, async (req, res)=>{
   try{
     let td = new Date(new Date().setDate(new Date().getDate())),
     today = td.setHours(0, 0, 0, 0);
-      const leaders = await LeaderboardModel.find({created:today}).sort("-wins")
-      console.log(leaders);
+      const leaders = await LeaderboardModel.find({created:today}).sort("-wins").limit(50)
       return res.json(leaders)
   }catch(err){
     res.json({
@@ -157,7 +157,33 @@ router.post("/update-leaderboard", isRequestFromMobile, async(req, res)=>{
 
   }catch(err){
     res.json({
-      errors: [{ msg: "Error occured" }]
+      errors: [{ msg: "An error occured" }]
+    })
+  }
+})
+router.get('/my-history/:userid', isRequestFromMobile, async (req, res)=>{
+  try{
+      const {userid } = req.params
+      const history = await HistoryModel.find({userid}).sort("-created").limit(50)
+      return res.json(history);
+  }catch(err){
+    res.json({
+      errors: [{ msg: "An error occured" }]
+    })
+  }
+})
+
+router.post('/update-history', isRequestFromMobile, async (req, res)=>{
+  try{
+        const { userid,iswinner,userpoint,opponentpoint,opponentname} = req.body
+        const newHistory = new HistoryModel({
+          userid,iswinner,userpoint,opponentpoint,opponentname
+        })
+        await newHistory.save();
+        return res.json(newHistory);
+  }catch(err){
+    res.json({
+      errors: [{ msg: "An error occured" }]
     })
   }
 })
