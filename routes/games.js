@@ -8,6 +8,7 @@ const { getWords } = require('../middleware/helperFunctions')
 const GamesModel = require('../models/Games')
 const GamesRandomModel = require('../models/GamesRandom')
 const UsersModel = require('../models/User')
+const LeaderboardModel = require('../models/Leaderboard')
 
 
 router.post('/validate-code', isRequestFromMobile, async(req, res)=>{
@@ -122,5 +123,29 @@ router.post('/random-game-update', isRequestFromMobile, async(req, res)=>{
       }
 })
 
+router.post("/update-leaderboard", isRequestFromMobile, async(req, res)=>{
+  try{
+    const {userid, name, avatar} = req.body;
+  let td = new Date(new Date().setDate(new Date().getDate())),
+      today = td.setHours(0, 0, 0, 0);
+    const userBoard = await LeaderboardModel.findOne({userid, created:today});
+    if(userBoard){
+      const updateUser = await LeaderboardModel.updateOne({userid}, {avatar, wins:userBoard.wins + 1})
+      if(updateUser.n > 0) return res.json(updateUser)
+
+    }else{
+      const newUser = new LeaderboardModel({
+        userid, name, avatar, wins: 1, created:today
+      })
+      await newUser.save()
+      return res.json(newUser);
+    }
+
+  }catch(err){
+    res.json({
+      errors: [{ msg: "Error occured" }]
+    })
+  }
+})
 
 module.exports = router;
