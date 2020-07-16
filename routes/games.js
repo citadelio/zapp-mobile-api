@@ -123,6 +123,20 @@ router.post('/random-game-update', isRequestFromMobile, async(req, res)=>{
       }
 })
 
+router.get("/get-leaderboard", isRequestFromMobile, async (req, res)=>{
+  try{
+    let td = new Date(new Date().setDate(new Date().getDate())),
+    today = td.setHours(0, 0, 0, 0);
+      const leaders = await LeaderboardModel.find({created:today}).sort("-wins")
+      console.log(leaders);
+      return res.json(leaders)
+  }catch(err){
+    res.json({
+      errors: [{ msg: "Error occured" }]
+    })
+  }
+})
+
 router.post("/update-leaderboard", isRequestFromMobile, async(req, res)=>{
   try{
     const {userid, name, avatar} = req.body;

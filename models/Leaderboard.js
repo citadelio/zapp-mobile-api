@@ -7,7 +7,6 @@ const LeaderboardSchema = new Schema({
     avatar: String,
     wins: Number,
     created : Number,
-    updated : Date,
 })
 
 module.exports = mongoose.model('leaderboard', LeaderboardSchema);
