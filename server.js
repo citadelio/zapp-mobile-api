@@ -44,11 +44,11 @@ app.get('/', (req, res)=>{
   // res.json({
   //   msg:`Welcome to ${process.env.SITE_NAME}. Download the app on the Android Playstore and Apple Appstore`
   // })
-  res.sendFile('/')
+  res.sendFile('index.html')
 })
-// app.get('/payment-success', (req, res)=>{
-//   res.sendFile('/success.html')
-// })
+app.get('/payment-success', (req, res)=>{
+  res.sendFile('success.html')
+})
 
 // ################## WEB SOCKET CONNECTION  #########################
 //start socket connection 

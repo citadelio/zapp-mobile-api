@@ -38,15 +38,14 @@ router.get('/get-active-users', isRequestFromMobile, async (req, res)=>{
        users = users.map((a) => ({sort: Math.random(), value: a}))
                     .sort((a, b) => a.sort - b.sort)
                     .map((a) => a.value)
+                    .limit(50)
       return res.json(users);
   }catch(err){
     return res.json({
-      errors: [
-        {
+      errors: [{
           msg: "An error occurred, try again",
           err
-        }
-      ]
+        }]
     });
   }
 } )
