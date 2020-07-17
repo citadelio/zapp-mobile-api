@@ -41,10 +41,10 @@ app.use('/wallets', require('./routes/wallets'));
 app.use(express.static(path.join(__dirname,"src")));
 
 app.get('/', (req, res)=>{
-  // res.json({
-  //   msg:`Welcome to ${process.env.SITE_NAME}. Download the app on the Android Playstore and Apple Appstore`
-  // })
-  res.sendFile('index.html')
+  res.json({
+    msg:`Welcome to ${process.env.SITE_NAME}. Download the app on the Android Playstore and Apple Appstore`
+  })
+  // res.sendFile('index.html')
 })
 app.get('/payment-success', (req, res)=>{
   res.sendFile('success.html')
