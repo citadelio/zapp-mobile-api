@@ -5,6 +5,7 @@ const isRequestFromMobile = require("../middleware/mobilecheck");
 
 // Models
 const UserModel = require('../models/User');
+const BankAccountModel = require('../models/BankAccounts');
 
 router.get('/detail', protectedRoute, async(req, res)=>{
     try{
@@ -37,7 +38,7 @@ router.get('/get-active-users', isRequestFromMobile, async (req, res)=>{
       let users = await UserModel.find({role:"bot"}).limit(50)
        users = users.map((a) => ({sort: Math.random(), value: a}))
                     .sort((a, b) => a.sort - b.sort)
-                    .map((a) => a.value)
+                    .map((a) => a.value);
       return res.json(users);
   }catch(err){
     return res.json({
@@ -54,6 +55,23 @@ router.get('/get-updated-data/:userid', isRequestFromMobile, async(req, res)=>{
       const {userid} = req.params
         const user = await UserModel.findById(userid);
         return res.json(user);
+    }catch(err){
+      return res.json({
+        errors: [
+          {
+            msg: "An error occurred, try again",
+            err
+          }
+        ]
+      });
+    }
+})
+router.get('/get-bank-account/:userid', isRequestFromMobile, async(req, res)=>{
+    try{
+      const {userid} = req.params
+        const account = await BankAccountModel.findOne({userid});
+        if(!account) return res.json({status:false});
+        return res.json({status:true});
     }catch(err){
       return res.json({
         errors: [

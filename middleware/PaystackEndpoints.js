@@ -30,12 +30,11 @@ const resolveAccountNumber = async(accountnumber, bankcode) => {
 const initializeTransaction = async(transaction, user) => {
 
     try{
-        let email = `${user.userid}@gmail.com`,
             callBack = `${process.env.BASE_PSK_URL}/wallets/payment-redirect`,
             amount = transaction.amount * 100; //amount in kobo
 
         const response = await axios.post(`https://api.paystack.co/transaction/initialize`,{
-            amount, email,
+            amount, email:user.email,
             reference: transaction.txref,
             callback_url: callBack,
             channels:[transaction.method],

@@ -7,18 +7,37 @@ const UserModel = require('../models/User')
 /* MOBILE APP AUTH */
 router.post('/mobile', isRequestFromMobile, async (req, res) => {
   try{
-      const { id, name, picture, authType} = req.body
+    const colorsArray = ['1da1f2','673AB7','009688','8BC34A','795548','FF9800','ad04bf']
+    const randonumber = Math.floor(Math.random() * colorsArray.length)
+    let randomColor = colorsArray[randonumber]
+      const { id, name, picture, authType, email,userID} = req.body
+      let userid, useremail, avatar;
+       if(authType === "facebook"){
+          userid = id; useremail = `${id}@gmail.com`;
+          avatar = picture;
+       }else if(authType === "twitter"){
+          userid = userID; useremail = email;
+          avatar = {
+            data:{
+              url: `https://ui-avatars.com/api/?name=${name}&background=${randomColor}&color=fff`
+            }
+          }
+       }
+        
+          
       //check if id exist
-      let user = await UserModel.findOne({userid:id});
+      let user = await UserModel.findOne({userid});
       if(!user){
           //create a new user record
           user = new UserModel({
               name,
               authType,
-              avatar:picture,
-              userid:id,
-              role:"user"
+              userid,
+              avatar,
+              email: useremail,
+              role:"user",
           }) 
+          console.log(user)
           await user.save();
       }
       //generate token using jwt

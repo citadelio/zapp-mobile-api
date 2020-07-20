@@ -85,7 +85,7 @@ const  createUsername = name => {
 
 
 const  getWords = () => {
-  const words = randomWords({exactly:15, wordsPerString:2, separator:''})
+  const words = randomWords({exactly:3, wordsPerString:2, separator:''})
   return words
 }
 

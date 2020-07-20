@@ -10,6 +10,7 @@ const GamesRandomModel = require('../models/GamesRandom')
 const UsersModel = require('../models/User')
 const LeaderboardModel = require('../models/Leaderboard')
 const HistoryModel = require('../models/History')
+const GamePinModel = require('../models/GamePins')
 
 
 router.post('/validate-code', isRequestFromMobile, async(req, res)=>{
@@ -188,4 +189,65 @@ router.post('/update-history', isRequestFromMobile, async (req, res)=>{
   }
 })
 
+router.post("/save-multigame-pin", isRequestFromMobile, async(req, res)=>{
+  try{
+      const {gameCode, name, creator} = req.body;
+      const game = await GamePinModel.findOne({gameCode});
+      if(!game){
+          const newGamePin = new GamePinModel({
+            name,
+            gameCode,
+            creator,
+          })
+          await newGamePin.save();
+          res.json(newGamePin)
+      }else{
+        res.json({
+          errors: [{ msg: "Error creating game, Close and try again" }]
+        })
+      }
+
+  }catch(err){
+    res.json({
+      errors: [{ msg: "An error occured" }]
+    })
+  }
+})
+router.get("/get-multigame-pin/:gameCode", isRequestFromMobile, async(req, res)=>{
+  try{
+    const {gameCode} = req.params;
+      const game = await GamePinModel.findOne({gameCode});
+      if(!game){
+        return  res.json({
+          errors: [{ msg: "Invalid Game Code " }]
+        })
+      }
+      return res.json(game)
+  
+  }catch(err){
+    res.json({
+      errors: [{ msg: "An error occured" }]
+    })
+  }
+})
+
+router.get("/check-multiplayer-game/:gameCode", isRequestFromMobile, async(req, res)=>{
+  try{
+    console.log(1)
+    const {gameCode} = req.params;
+    console.log(gameCode)
+      const game = await GamesModel.findOne({gameCode});
+      console.log(game)
+      if(game){
+        return res.json({status:true, game})
+      }else{
+        return res.json({status:false})
+      }
+  
+  }catch(err){
+    res.json({
+      errors: [{ msg: "An error occured" }]
+    })
+  }
+})
 module.exports = router;

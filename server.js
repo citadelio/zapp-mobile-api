@@ -77,7 +77,7 @@ io.on('connection',socket=>{
     }
     //join game
     socket.join(gameCode);
-    io.to(gameCode).emit('game-created',{gameCode})
+    // io.to(gameCode).emit('game-created',{gameCode})
     // io.to(gameCode).emit('start-game',{gameCode})
   })
 
@@ -182,10 +182,17 @@ io.on('connection',socket=>{
   socket.on('validate-answer', async({gameCode, userid, word})=>{
       socket.broadcast.to(gameCode).emit('add-message', word)
       try{
-          const game = await GamesModel.findOne({gameCode});
+        const nextWordData = await nextWord(gameCode);
+        if(nextWordData.endgame){
+          io.to(gameCode).emit('stop-word')
+        }
+        else{
+        if(!nextWordData.errors) io.to(gameCode).emit('next-word', nextWordData)
+      } 
+        
+        const game = await GamesModel.findOne({gameCode});
           if(game){
-            if(game.currentWord.toLowerCase() === word){
-              const nextWordData = await nextWord(gameCode);
+            // if(game.currentWord.toLowerCase() === word){
               let thisPlayer = game.players.map(player=>{
                 if(player.playerId === userid) return player 
               })
@@ -202,16 +209,11 @@ io.on('connection',socket=>{
             if(updatedGame.n > 0){
               const currentScore = await getScore(gameCode)
               if(!currentScore.errors) io.to(gameCode).emit("update-score", currentScore)
-
               if(nextWordData.endgame){
                 io.to(gameCode).emit('end-game')
               }
-              else{
-              if(!nextWordData.errors) io.to(gameCode).emit('next-word', nextWordData)
-            } 
-
           }
-            }
+            // }
           }
       }catch(err){
         console.log(err)
