@@ -35,7 +35,7 @@ router.get('/detail', protectedRoute, async(req, res)=>{
 
 router.get('/get-active-users', isRequestFromMobile, async (req, res)=>{
   try{
-      let users = await UserModel.find({role:"bot"}).limit(50)
+      let users = await UserModel.find({role:"bot"}).limit(5)
        users = users.map((a) => ({sort: Math.random(), value: a}))
                     .sort((a, b) => a.sort - b.sort)
                     .map((a) => a.value);
