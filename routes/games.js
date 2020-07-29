@@ -250,4 +250,11 @@ router.get("/check-multiplayer-game/:gameCode", isRequestFromMobile, async(req, 
     })
   }
 })
+
+router.get("/version", (req, res)=>{
+    res.json({
+      version: 1.0,
+      link: "https://play.google.com/store/apps/details?id=com.twitter.android&hl=en"
+    })
+})
 module.exports = router;
