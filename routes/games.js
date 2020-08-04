@@ -253,8 +253,8 @@ router.get("/check-multiplayer-game/:gameCode", isRequestFromMobile, async(req, 
 
 router.get("/version", (req, res)=>{
     res.json({
-      version: "1.0",
-      link: "https://getzapp.xyz"
+      version: "1.1",
+      link: "https://www.getjar.mobi/mobile/980558/Zapp"
     })
 })
 module.exports = router;
