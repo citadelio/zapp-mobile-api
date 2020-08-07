@@ -5,7 +5,7 @@ module.exports = [
         key:"1",
         name:"Fastest Finger",
         photo:"https://res.cloudinary.com/citadel/image/upload/v1592729082/sprinter_cp9ni0.png",
-        description:"Challenge your friends to type fast!. You will be presented with words at intervals, first person to type a word gets a point. There are 15 words in total. The winner at the end of 15 words wins the prize money. Type as fast ad accurate as possible.",
+        description:"Challenge your friends to type fast!. You will be presented with words at intervals, first person to type a word gets a point. There are 15 words in total. The person with the highest point at the end of 15 words wins the game, hence the prize money. Type as fast and accurate as possible.",
         stake:200,
         available:true
     },
